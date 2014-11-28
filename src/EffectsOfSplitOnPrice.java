@@ -52,12 +52,12 @@ public class EffectsOfSplitOnPrice {
 		}
 		
 		// create the charts
-		drawChart(PRICE, 2, 10, 10, 180, SPLIT, "price-split");
-		drawChart(PRICE, 2, 10, 10, 180, DIVIDEND, "price-dividend");
-		drawChart(PRICE, 2, 10, 10, 180, RANDOM, "price-random");
-		drawChart(VOLUME, .04, 1, 10, 30, SPLIT, "volume-split");
-		drawChart(VOLUME, .04, 1, 10, 30, DIVIDEND, "volume-dividend");
-		drawChart(VOLUME, .04, 1, 10, 30, RANDOM, "volume-random");
+		drawChart(PRICE, SPLIT, 2, 10, 10, 250);
+		drawChart(PRICE, DIVIDEND, 2, 10, 10, 250);
+		drawChart(PRICE, RANDOM, 2, 10, 10, 250);
+		drawChart(VOLUME, SPLIT, .04, 1, 10, 30);
+		drawChart(VOLUME, DIVIDEND, .04, 1, 10, 30);
+		drawChart(VOLUME, RANDOM,.04, 1, 10, 30);
 		
 		// "I'm finished!"
 		U.p("done");
@@ -69,20 +69,19 @@ public class EffectsOfSplitOnPrice {
 	 * and event (SPLIT, DIVIDEND, or RANDOM)
 	 * 
 	 * @param type
+	 * @param event
 	 * @param scale
 	 * @param ySubdivisions
 	 * @param windowRadius
-	 * @param event
-	 * @param nameString
+	 
 	 */
 	public static void drawChart(
 			int type, 
-			double scale, 
+			int event,
+			double scale,
 			int ySubdivisions,
 			int xGroup,
-			int windowRadius, 
-			int event, 
-			String nameString) {
+			int windowRadius) {
 		
 		// our random object if we are randomly selecting events
 		Random random = new Random();
@@ -241,8 +240,13 @@ public class EffectsOfSplitOnPrice {
 		}
 
 		// saving graphic object as PNG
+		String typeString = "price-";
+		if (type == VOLUME) typeString = "volume-";
+		String eventString = "split-";
+		if (type == DIVIDEND) eventString = "dividend-";
+		if (type == RANDOM) eventString = "random-";
 		try {
-			ImageIO.write(bufferedImage,"PNG",new File("output/" + nameString + ".png"));
+			ImageIO.write(bufferedImage,"PNG",new File("output/" + typeString + eventString + windowRadius + ".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
