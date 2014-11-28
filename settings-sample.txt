@@ -1,0 +1,11 @@
+// SETTINGS FILE
+//
+// Rename this file to "settings.txt" in order for it to be accessed
+// from the app
+
+// put your auth token here
+// this is found by going to Quandl.com
+// logging in (if necessary)
+// selecting "Account Settings" from the username drop-down in the top right of the screen
+
+token:	xxxxxxxxxxxx
