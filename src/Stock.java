@@ -33,7 +33,11 @@ public class Stock {
 			//skipping the first line, which is the column names
 			line = br.readLine();
 			while (line != null) {
-				out.add(new StockDay(line));
+				try {
+					out.add(new StockDay(line));
+				} catch (Exception e) {
+					U.p(code);
+				}
 				line = br.readLine();
 			}
 			br.close();

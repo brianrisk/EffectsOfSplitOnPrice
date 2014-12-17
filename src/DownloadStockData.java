@@ -28,6 +28,7 @@ public class DownloadStockData {
 	public static void main(String [] args) {
 		// loading the value of our user token
 		loadSettings();
+		U.p(token);
 		
 		// setting up data directory structure
 		componentsDir = new File("data/components"); 

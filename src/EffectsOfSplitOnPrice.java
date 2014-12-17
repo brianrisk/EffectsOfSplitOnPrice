@@ -52,12 +52,13 @@ public class EffectsOfSplitOnPrice {
 		}
 		
 		// create the charts
-		drawChart(PRICE, SPLIT, 2, 10, 10, 250);
-		drawChart(PRICE, DIVIDEND, 2, 10, 10, 250);
-		drawChart(PRICE, RANDOM, 2, 10, 10, 250);
-		drawChart(VOLUME, SPLIT, .04, 1, 10, 30);
-		drawChart(VOLUME, DIVIDEND, .04, 1, 10, 30);
-		drawChart(VOLUME, RANDOM,.04, 1, 10, 30);
+		//drawChart(PRICE, SPLIT, .1, 2, 10, 1000);
+		drawChart(PRICE, SPLIT, 1, 10, 10, 250);
+		drawChart(PRICE, DIVIDEND, 1, 10, 10, 250);
+		drawChart(PRICE, RANDOM, 1, 10, 10, 250);
+//		drawChart(VOLUME, SPLIT, .04, 1, 10, 30);
+//		drawChart(VOLUME, DIVIDEND, .04, 1, 10, 30);
+//		drawChart(VOLUME, RANDOM,.04, 1, 10, 30);
 		
 		// "I'm finished!"
 		U.p("done");
@@ -98,6 +99,7 @@ public class EffectsOfSplitOnPrice {
 		double xInc = (double) imageWidth / (windowRadius * 2 + 1);
 
 		double [] yAverages = new double[windowRadius * 2 + 2];
+		double [] proportionAverages = new double[windowRadius * 2 + 2];
 		int yCount = 0;
 
 		// loop through stocks
@@ -110,6 +112,7 @@ public class EffectsOfSplitOnPrice {
 
 			for (int dayIndex = windowRadius + 1; dayIndex < stockDays.size() - windowRadius - 1; dayIndex++) {
 				StockDay day = stockDays.get(dayIndex);
+				
 
 				// based on our selected event, see if we are examining this particular day
 				boolean eventIsTrue = false;
@@ -121,6 +124,7 @@ public class EffectsOfSplitOnPrice {
 					Point2D.Double [] points = new Point2D.Double [windowRadius * 2 + 2];
 					double [] proportions = new double[windowRadius * 2 + 2];
 					boolean skip = false;
+					
 					for (int subIndex = dayIndex - windowRadius - 1; subIndex < dayIndex + windowRadius + 1; subIndex ++) {
 						StockDay subDay = stockDays.get(subIndex);
 						
@@ -131,22 +135,13 @@ public class EffectsOfSplitOnPrice {
 
 						double proportion = 0;
 						
+						// getting proportion change from reference day
 						if (type == PRICE) {
-							if  (day.adj_close < subDay.adj_close) {
-								proportion = (subDay.adj_close - day.adj_close) / day.adj_close;
-							} else {
-								proportion = -1 * (day.adj_close - subDay.adj_close) / subDay.adj_close;
-							}
-							// catch for bad data
-							if (Math.abs(proportion) > .75) skip = true;
+							proportion = getProportion(day.adj_close, subDay.adj_close);
 						}
 						if (type == VOLUME) {
-							if  (day.adj_volume < subDay.adj_volume) {
-								proportion = (subDay.adj_volume - day.adj_volume) / day.adj_volume;
-							} else {
-								proportion = -1 * (day.adj_volume - subDay.adj_volume) / subDay.adj_volume;
-							}
-							// catch for bad data
+							proportion = getProportion(day.adj_volume, subDay.adj_volume);
+							// catch for null values
 							if (subDay.adj_volume == 0 || day.adj_volume == 0) skip = true;
 						}
 						
@@ -155,6 +150,7 @@ public class EffectsOfSplitOnPrice {
 						double yLoc = (imageHeight / 2) - Math.round((imageHeight / 2) * proportion * scale);
 
 						points[arrayIndex] = new Point2D.Double(xLoc, yLoc);
+						proportionAverages[arrayIndex] += proportion;
 					}
 
 					// if we determined this data isn't suitable, skip it
@@ -190,7 +186,12 @@ public class EffectsOfSplitOnPrice {
 		// dividing all y totals to get average
 		for (int pointIndex = 0; pointIndex < yAverages.length; pointIndex++) {
 			yAverages[pointIndex] /= yCount;
+			proportionAverages[pointIndex] /= yCount;
 		}
+		
+		// reporting the first and last average
+		U.p("first average: " + proportionAverages[0]);
+		U.p("last average: " + proportionAverages[proportionAverages.length - 1]);
 
 		// drawing average line
 		g.setColor(Color.WHITE);
@@ -207,7 +208,7 @@ public class EffectsOfSplitOnPrice {
 		g.setStroke(new BasicStroke(1.0f));
 		g.setColor(Color.WHITE);
 		g.drawLine(0, imageHeight / 2, imageWidth, imageHeight / 2);
-		double xTic = xInc ;
+		double xTic = 0 ;
 		while (xTic < imageWidth) {
 			g.drawLine((int) xTic, imageHeight / 2 + 1, (int) xTic, imageHeight / 2 + 3);
 			xTic += (xInc * xGroup);
@@ -243,12 +244,31 @@ public class EffectsOfSplitOnPrice {
 		String typeString = "price-";
 		if (type == VOLUME) typeString = "volume-";
 		String eventString = "split-";
-		if (type == DIVIDEND) eventString = "dividend-";
-		if (type == RANDOM) eventString = "random-";
+		if (event == DIVIDEND) eventString = "dividend-";
+		if (event == RANDOM) eventString = "random-";
+		
+		U.p( typeString + eventString + windowRadius);
+		
 		try {
 			ImageIO.write(bufferedImage,"PNG",new File("output/" + typeString + eventString + windowRadius + ".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * Returns proportion change.
+	 * divides by the smaller of the two values for slope continuity.
+	 * @param valA
+	 * @param valB
+	 * @return
+	 */
+	private static double getProportion(double valA, double valB) {
+		if  (valA < valB) {
+			return (valB - valA) / valA;
+		} else {
+			return (valB - valA) / valB;
 		}
 	}
 
