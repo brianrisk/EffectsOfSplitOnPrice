@@ -55,7 +55,7 @@ public class DownloadStockData {
 	 * Downloads a stock csv file given the Quandl code
 	 */
 	public static void downloadStock(String code) {
-		String url = "http://www.quandl.com/api/v1/datasets/EOD/" + code + ".csv?auth_token=" + token;
+		String url = "https://www.quandl.com/api/v1/datasets/EOD/" + code + ".csv?auth_token=" + token;
 		File stock = new File(stockDir, code + ".csv");
 		downloadFileFromURL(url, stock);
 	}
