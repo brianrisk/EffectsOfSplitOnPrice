@@ -1,3 +1,4 @@
-/.settings/
-
-/data/
+.settings/
+EffectsOfSplitOnPrice.iml
+data/
+.idea
