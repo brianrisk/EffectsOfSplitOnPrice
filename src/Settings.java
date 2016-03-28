@@ -17,7 +17,7 @@ public class Settings
         loadSettings();
     }
 
-    public Settings getInstance() {
+    public static Settings getInstance() {
         if (settings == null) settings = new Settings();
         return settings;
     }
