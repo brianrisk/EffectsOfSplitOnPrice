@@ -7,18 +7,18 @@ import java.util.Date;
 public class StockDay implements Comparable<StockDay>{
 	
 	Date date;
-	double open;
-	double high;
-	double low;
-	double close;
-	double volume;
-	double dividend;
-	double split;
-	double adj_open;
-	double adj_high;
-	double adj_low;
-	double adj_close;
-	double adj_volume;
+	float open;
+    float high;
+    float low;
+    float close;
+    float volume;
+    float dividend;
+    float split;
+    float adj_open;
+    float adj_high;
+    float adj_low;
+    float adj_close;
+    float adj_volume;
 	
 	/**
 	 * values based on content of line taken from EOD csv file
@@ -38,18 +38,22 @@ public class StockDay implements Comparable<StockDay>{
 			e.printStackTrace();
 		}
 				
-		open = Double.parseDouble(chunks[1]);
-		high = Double.parseDouble(chunks[2]);
-		low = Double.parseDouble(chunks[3]);
-		close = Double.parseDouble(chunks[4]);
-		volume = Double.parseDouble(chunks[5]);
-		dividend = Double.parseDouble(chunks[6]);
-		split = Double.parseDouble(chunks[7]);
-		adj_open = Double.parseDouble(chunks[8]);
-		adj_high = Double.parseDouble(chunks[9]);
-		adj_low = Double.parseDouble(chunks[10]);
-		adj_close = Double.parseDouble(chunks[11]);
-		adj_volume = Double.parseDouble(chunks[12]);	
+		open = Float.parseFloat(chunks[1]);
+		high = Float.parseFloat(chunks[2]);
+		low = Float.parseFloat(chunks[3]);
+		close = Float.parseFloat(chunks[4]);
+		volume = Float.parseFloat(chunks[5]);
+        if (chunks[6].isEmpty()) {
+            dividend = 0;
+        } else {
+            dividend = Float.parseFloat(chunks[6]);
+        }
+		split = Float.parseFloat(chunks[7]);
+		adj_open = Float.parseFloat(chunks[8]);
+		adj_high = Float.parseFloat(chunks[9]);
+		adj_low = Float.parseFloat(chunks[10]);
+		adj_close = Float.parseFloat(chunks[11]);
+		adj_volume = Float.parseFloat(chunks[12]);	
 
 	}
 	

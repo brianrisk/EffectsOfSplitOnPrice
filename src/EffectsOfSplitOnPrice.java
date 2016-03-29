@@ -44,17 +44,14 @@ public class EffectsOfSplitOnPrice {
         Database eod = new Database("EOD");
         eod.refresh();
 
-        if (false)
-        {
+        // Importing the stock data from the downloaded EOD
+        U.p("loading data...");
+        stocks = StockDataLoader.loadStockData(new File("databases/EOD.csv"));
 
-            // Importing the stock data from the downloaded EOD
-            stocks = StockDataLoader.loadStockData(new File("databases/EOD.csv"));
-
-            // create the charts
-            drawChart(PRICE, SPLIT, 1, 10, 10, 250);
-            drawChart(PRICE, DIVIDEND, 1, 10, 10, 250);
-            drawChart(PRICE, RANDOM, 1, 10, 10, 250);
-        }
+        // create the charts
+        drawChart(PRICE, SPLIT, 1, 10, 10, 250);
+        drawChart(PRICE, DIVIDEND, 1, 10, 10, 250);
+        drawChart(PRICE, RANDOM, 1, 10, 10, 250);
 
 		// "I'm finished!"
 		U.p("done");

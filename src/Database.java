@@ -60,6 +60,8 @@ public class Database
                     updatedDatabase.renameTo(oldDatabase);
                     isUpdated = true;
                 }
+            } else {
+                U.p(code + " current; no download necessary");
             }
 
         } catch (MalformedURLException e) {

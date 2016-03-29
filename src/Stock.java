@@ -8,7 +8,7 @@ import java.util.Collections;
 
 public class Stock {
 	String code;
-	ArrayList<StockDay> days;
+	ArrayList<StockDay> days = new ArrayList<>();
 	
 	public Stock(String code) {
 		this.code = code;
