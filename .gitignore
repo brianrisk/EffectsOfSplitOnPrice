@@ -3,3 +3,6 @@ EffectsOfSplitOnPrice.iml
 data/
 .idea
 .DS_Store
+bin/
+databases/
+settings.txt

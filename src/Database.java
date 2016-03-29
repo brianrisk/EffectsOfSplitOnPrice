@@ -35,16 +35,21 @@ public class Database
             lastModified = new Date(0);
         }
         try {
-            String batchString = "https://www.quandl.com/api/v3/data.databases/" + code + "/data?auth_token=" + Settings.getInstance().token;
+            String batchString = "https://www.quandl.com/api/v3/databases/" + code + "/data?auth_token=" + Settings.getInstance().token;
 
             URL url = new URL(batchString);
 
             // determining if we should perform an update
             Date updateDate = F.getModifiedDateOfUrl(url);
+
+            U.p(updateDate);
+
             boolean performUpdate = false;
             if (updateDate.after(lastModified)) performUpdate = true;
 
             if (performUpdate) {
+
+                U.p("downloading: " + code);
 
                 // download and unzip
                 File updatedDatabase = F.unzipUrl(url, dataDir);

@@ -21,7 +21,7 @@ import javax.imageio.ImageIO;
  */
 public class EffectsOfSplitOnPrice {
 
-	static File stockDir = new File("data/stocks");
+    // image properties
 	static int imageWidth = 500;
 	static int imageHeight = 500;
 	
@@ -33,33 +33,29 @@ public class EffectsOfSplitOnPrice {
 	static final int SPLIT = 1;
 	static final int DIVIDEND = 2;
 	static final int RANDOM = 3;
-	
-	static ArrayList<String> codes;
+
+    // stock data
 	static ArrayList<Stock> stocks;
 
 	
 	public static void main(String [] args) {
-		
-		// load codes and stocks
-		File componentsFile = new File("data/components/components.txt");
-		codes = DownloadStockData.loadQuandlCodes(componentsFile);
-		Collections.shuffle(codes);
-		stocks = new ArrayList<Stock>();
-		for (String code: codes) {
-			File stockFile = new File("data/stocks/" + code + ".csv");
-			if (!stockFile.exists()) continue;
-			stocks.add(new Stock(code));
-		}
-		
-		// create the charts
-		//drawChart(PRICE, SPLIT, .1, 2, 10, 1000);
-		drawChart(PRICE, SPLIT, 1, 10, 10, 250);
-		drawChart(PRICE, DIVIDEND, 1, 10, 10, 250);
-		drawChart(PRICE, RANDOM, 1, 10, 10, 250);
-//		drawChart(VOLUME, SPLIT, .04, 1, 10, 30);
-//		drawChart(VOLUME, DIVIDEND, .04, 1, 10, 30);
-//		drawChart(VOLUME, RANDOM,.04, 1, 10, 30);
-		
+
+        // Setting up new EOD database and downloading fresh data
+        Database eod = new Database("EOD");
+        eod.refresh();
+
+        if (false)
+        {
+
+            // Importing the stock data from the downloaded EOD
+            stocks = StockDataLoader.loadStockData(new File("databases/EOD.csv"));
+
+            // create the charts
+            drawChart(PRICE, SPLIT, 1, 10, 10, 250);
+            drawChart(PRICE, DIVIDEND, 1, 10, 10, 250);
+            drawChart(PRICE, RANDOM, 1, 10, 10, 250);
+        }
+
 		// "I'm finished!"
 		U.p("done");
 	}
@@ -73,7 +69,9 @@ public class EffectsOfSplitOnPrice {
 	 * @param event
 	 * @param scale
 	 * @param ySubdivisions
-	 * @param windowRadius
+	 * @param numberOfStockDaysLookingForwards defines the radius of days considered.
+     *                                         So if this is 100, we look 100 days after split
+     *                                         and 100 days before split.
 	 
 	 */
 	public static void drawChart(
@@ -82,7 +80,7 @@ public class EffectsOfSplitOnPrice {
 			double scale,
 			int ySubdivisions,
 			int xGroup,
-			int windowRadius) {
+			int numberOfStockDaysLookingForwards) {
 		
 		// our random object if we are randomly selecting events
 		Random random = new Random();
@@ -96,10 +94,10 @@ public class EffectsOfSplitOnPrice {
 		g.fillRect(0,0,imageWidth,imageHeight);
 		
 		// The pixel width of one day
-		double xInc = (double) imageWidth / (windowRadius * 2 + 1);
+		double xInc = (double) imageWidth / (numberOfStockDaysLookingForwards * 2 + 1);
 
-		double [] yAverages = new double[windowRadius * 2 + 2];
-		double [] proportionAverages = new double[windowRadius * 2 + 2];
+		double [] yAverages = new double[numberOfStockDaysLookingForwards * 2 + 2];
+		double [] proportionAverages = new double[numberOfStockDaysLookingForwards * 2 + 2];
 		int yCount = 0;
 
 		// loop through stocks
@@ -108,9 +106,9 @@ public class EffectsOfSplitOnPrice {
 		for (int stockIndex = 0; stockIndex < stocks.size(); stockIndex++) {
 			Stock stock = stocks.get(stockIndex);
 			ArrayList<StockDay> stockDays = stock.days;
-			if (stockDays.size() < 2 * windowRadius + 1) continue;
+			if (stockDays.size() < 2 * numberOfStockDaysLookingForwards + 1) continue;
 
-			for (int dayIndex = windowRadius + 1; dayIndex < stockDays.size() - windowRadius - 1; dayIndex++) {
+			for (int dayIndex = numberOfStockDaysLookingForwards + 1; dayIndex < stockDays.size() - numberOfStockDaysLookingForwards - 1; dayIndex++) {
 				StockDay day = stockDays.get(dayIndex);
 				
 
@@ -121,17 +119,17 @@ public class EffectsOfSplitOnPrice {
 				if (event == RANDOM && random.nextDouble() < .004) eventIsTrue = true;
 				
 				if (eventIsTrue) {
-					Point2D.Double [] points = new Point2D.Double [windowRadius * 2 + 2];
-					double [] proportions = new double[windowRadius * 2 + 2];
+					Point2D.Double [] points = new Point2D.Double [numberOfStockDaysLookingForwards * 2 + 2];
+					double [] proportions = new double[numberOfStockDaysLookingForwards * 2 + 2];
 					boolean skip = false;
 					
-					for (int subIndex = dayIndex - windowRadius - 1; subIndex < dayIndex + windowRadius + 1; subIndex ++) {
+					for (int subIndex = dayIndex - numberOfStockDaysLookingForwards - 1; subIndex < dayIndex + numberOfStockDaysLookingForwards + 1; subIndex ++) {
 						StockDay subDay = stockDays.get(subIndex);
 						
 						// our index for the data arrays we are building
-						int arrayIndex = subIndex - (dayIndex - windowRadius - 1);
+						int arrayIndex = subIndex - (dayIndex - numberOfStockDaysLookingForwards - 1);
 						
-						double xLoc = Math.round(xInc * (subIndex - (dayIndex - windowRadius - 1)));
+						double xLoc = Math.round(xInc * (subIndex - (dayIndex - numberOfStockDaysLookingForwards - 1)));
 
 						double proportion = 0;
 						
@@ -215,7 +213,7 @@ public class EffectsOfSplitOnPrice {
 		}
 		
 		// drawing y axis
-		int mid = (int) ((windowRadius + 1) * xInc);
+		int mid = (int) ((numberOfStockDaysLookingForwards + 1) * xInc);
 		g.drawLine(mid, 0, mid, imageHeight);
 		
 		//drawing y tics and labels
@@ -247,10 +245,10 @@ public class EffectsOfSplitOnPrice {
 		if (event == DIVIDEND) eventString = "dividend-";
 		if (event == RANDOM) eventString = "random-";
 		
-		U.p( typeString + eventString + windowRadius);
+		U.p( typeString + eventString + numberOfStockDaysLookingForwards);
 		
 		try {
-			ImageIO.write(bufferedImage,"PNG",new File("output/" + typeString + eventString + windowRadius + ".png"));
+			ImageIO.write(bufferedImage,"PNG",new File("output/" + typeString + eventString + numberOfStockDaysLookingForwards + ".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

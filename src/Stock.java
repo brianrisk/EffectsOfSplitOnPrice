@@ -12,7 +12,6 @@ public class Stock {
 	
 	public Stock(String code) {
 		this.code = code;
-		days = loadStockDays(code);
 	}
 
     public void addDay(StockDay day) {

@@ -16,16 +16,13 @@ import java.util.ArrayList;
  * @author brianrisk
  *
  */
-public class DownloadStockData {
+public class StockDataLoader
+{
 
-	/**
-	 * Loads the Quandl codes for the components into an ArrayList
-	 * @param componentsFile
-	 * @return
-	 */
-	public static ArrayList<String> loadQuandlCodes(File componentsFile) {
-		return null;
-	}
+
+    public static ArrayList<Stock> loadStockData(File databaseFile) {
+        return null;
+    }
 
 
 
