@@ -9,7 +9,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -46,12 +45,12 @@ public class EffectsOfSplitOnPrice {
 
         // Importing the stock data from the downloaded EOD
         U.p("loading data...");
-        stocks = StockDataLoader.loadStockData(new File("databases/EOD.csv"));
+        stocks = Loader.loadStockData(new File("databases/EOD.csv"));
 
         // create the charts
-        drawChart(PRICE, SPLIT, 1, 10, 10, 250);
-        drawChart(PRICE, DIVIDEND, 1, 10, 10, 250);
-        drawChart(PRICE, RANDOM, 1, 10, 10, 250);
+        drawChart(PRICE, SPLIT, 1, 10, 10, 200);
+        drawChart(PRICE, DIVIDEND, 1, 10, 10, 200);
+        drawChart(PRICE, RANDOM, 1, 10, 10, 200);
 
 		// "I'm finished!"
 		U.p("done");
@@ -69,7 +68,6 @@ public class EffectsOfSplitOnPrice {
 	 * @param numberOfStockDaysLookingForwards defines the radius of days considered.
      *                                         So if this is 100, we look 100 days after split
      *                                         and 100 days before split.
-	 
 	 */
 	public static void drawChart(
 			int type, 

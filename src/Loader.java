@@ -11,21 +11,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Our downloader class.  
- * Execute this main class to get a fresh components file and stock data.
+ * Stock Data downloader class.
  * 
  * @author brianrisk
  *
  */
-public class StockDataLoader
+public class Loader
 {
 
     /**
-     * Sample EOD CSV line:
-     * A,1999-11-18,45.5,50.0,40.0,44.0,44739900.0,0.0,1.0,29.75972820951089,32.70299803242955,26.16239842594364,28.778638268538003,44739900.0
-     *
-     * @param databaseFile
-     * @return
+     * Load stock data from a downloaded CSV
      */
     public static ArrayList<Stock> loadStockData(File databaseFile) {
         HashMap<String, Stock> stocks = new HashMap<>();
@@ -46,7 +41,7 @@ public class StockDataLoader
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<Stock>(stocks.values());
     }
 
 
