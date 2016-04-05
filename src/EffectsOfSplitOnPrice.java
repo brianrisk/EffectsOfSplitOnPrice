@@ -43,9 +43,9 @@ public class EffectsOfSplitOnPrice {
         stocks = Database.loadData(new File("databases/EOD.csv"));
 
         // create the charts
-        drawChart(PRICE, SPLIT, 1, 10, 10, 250);
-        drawChart(PRICE, DIVIDEND, 1, 10, 10, 250);
-        drawChart(PRICE, RANDOM, 1, 10, 10, 250);
+        drawChart(PRICE, SPLIT, 1, 10, 10, 200);
+        drawChart(PRICE, DIVIDEND, 1, 10, 10, 200);
+        drawChart(PRICE, RANDOM, 1, 10, 10, 200);
 
 		// "I'm finished!"
 		U.p("done");
