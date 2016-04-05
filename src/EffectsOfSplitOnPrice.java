@@ -93,14 +93,12 @@ public class EffectsOfSplitOnPrice {
 		// loop through stocks
 		// loop through days of stocks
 		// if a stock day has a split and there are +- 30 days, draw it
-		for (int stockIndex = 0; stockIndex < stocks.size(); stockIndex++) {
-			Stock stock = stocks.get(stockIndex);
+		for (Stock stock: stocks) {
 			ArrayList<StockDay> stockDays = stock.days;
 			if (stockDays.size() < 2 * numberOfStockDaysLookingForwards + 1) continue;
 
 			for (int dayIndex = numberOfStockDaysLookingForwards + 1; dayIndex < stockDays.size() - numberOfStockDaysLookingForwards - 1; dayIndex++) {
 				StockDay day = stockDays.get(dayIndex);
-				
 
 				// based on our selected event, see if we are examining this particular day
 				boolean eventIsTrue = false;
@@ -120,7 +118,6 @@ public class EffectsOfSplitOnPrice {
 						int arrayIndex = subIndex - (dayIndex - numberOfStockDaysLookingForwards - 1);
 						
 						double xLoc = Math.round(xInc * (subIndex - (dayIndex - numberOfStockDaysLookingForwards - 1)));
-
 						double proportion = 0;
 						
 						// getting proportion change from reference day
@@ -134,9 +131,7 @@ public class EffectsOfSplitOnPrice {
 						}
 						
 						proportions[arrayIndex] = proportion;
-
 						double yLoc = (imageHeight / 2) - Math.round((imageHeight / 2) * proportion * scale);
-
 						points[arrayIndex] = new Point2D.Double(xLoc, yLoc);
 						proportionAverages[arrayIndex] += proportion;
 					}
@@ -166,9 +161,7 @@ public class EffectsOfSplitOnPrice {
 						g.drawLine((int) pointA.getX(), (int) pointA.getY(), (int) pointB.getX() - 1, (int) pointB.getY());
 					}
 				}
-
 			}
-
 		}
 
 		// dividing all y totals to get average
@@ -208,7 +201,6 @@ public class EffectsOfSplitOnPrice {
 		
 		//drawing y tics and labels
 		g.setFont(new Font("Monospaced", Font.PLAIN, 10));
-		FontMetrics fm = g.getFontMetrics();
 		int yLoc = imageHeight / 2;
 		int i = 1;
 		while (yLoc > 0) {
