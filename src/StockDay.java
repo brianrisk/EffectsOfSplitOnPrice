@@ -3,7 +3,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+/**
+ * @author Brian Risk
+ */
 public class StockDay implements Comparable<StockDay>{
 	
 	Date date;

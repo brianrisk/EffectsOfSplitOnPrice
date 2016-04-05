@@ -1,12 +1,11 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
 /**
  * Singleton settings loader
  *
- * Created by brian.risk on 3/25/16.
+ * @author Brian Risk
  */
 public class Settings
 {
@@ -43,8 +42,6 @@ public class Settings
                 line = br.readLine();
             }
             br.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

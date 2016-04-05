@@ -1,10 +1,15 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
- * Created by brian.risk on 3/28/16.
+ * @author Brian Risk
  */
 public class Database
 {
@@ -13,6 +18,28 @@ public class Database
 
     public Database(String code) {
         this.code = code;
+    }
+
+    public static ArrayList<Stock> loadData(File databaseFile) {
+        HashMap<String, Stock> stocks = new HashMap<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(databaseFile));
+            String line = br.readLine();
+            while (line != null) {
+                int indexOfFirstComma = line.indexOf(',');
+                String stockName = line.substring(0, indexOfFirstComma);
+                String stockData = line.substring(indexOfFirstComma + 1);
+                Stock stock = stocks.get(stockName);
+                if (stock == null) stock = new Stock(stockName);
+                StockDay stockDay = new StockDay(stockData);
+                stock.addDay(stockDay);
+                stocks.put(stockName, stock);
+                line = br.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
