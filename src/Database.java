@@ -21,19 +21,20 @@ public class Database
     }
 
     public static ArrayList<Stock> loadData(File databaseFile) {
-        HashMap<String, Stock> stocks = new HashMap<>();
+        HashMap<StockSymbol, Stock> stocks = new HashMap<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader(databaseFile));
             String line = br.readLine();
             while (line != null) {
                 int indexOfFirstComma = line.indexOf(',');
-                String stockName = line.substring(0, indexOfFirstComma);
+                String symbol = line.substring(0, indexOfFirstComma);
+                StockSymbol stockSymbol = new StockSymbol(symbol);
                 String stockData = line.substring(indexOfFirstComma + 1);
-                Stock stock = stocks.get(stockName);
-                if (stock == null) stock = new Stock(stockName);
+                Stock stock = stocks.get(stockSymbol);
+                if (stock == null) stock = new Stock(symbol);
                 StockDay stockDay = new StockDay(stockData);
                 stock.addDay(stockDay);
-                stocks.put(stockName, stock);
+                stocks.put(stockSymbol, stock);
                 line = br.readLine();
             }
         } catch (IOException e) {
